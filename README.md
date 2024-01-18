@@ -1,4 +1,4 @@
-# ✨ OpenChat UI
+# ✨ OpenChat UI [TEST]
 
 OpenChat UI is a forked version of Chatbot UI that supports OpenChat models.
 
