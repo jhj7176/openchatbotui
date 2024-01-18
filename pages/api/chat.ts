@@ -31,14 +31,21 @@ const handler = async (req: Request): Promise<Response> => {
     for (let i = messages.length - 1; i >= 0; i--) {
       const message = messages[i];
       const tokens = tokenizer.encode(message.content, false);
-
+      console.log("model",model)
+      console.log("message",message)
+     // console.log("tokens",tokens)
+      console.log("tokenCount",tokenCount)
+      console.log("model.tokenLimit",model.tokenLimit)
+      model.tokenLimit = 4096;
+      console.log("tokenCount + tokens.length + 768",tokenCount + tokens.length + 768)
       if (tokenCount + tokens.length + 768 > model.tokenLimit) {
+      //if (tokenCount + tokens.length + 768 > 4096) {
         break;
       }
       tokenCount += tokens.length;
       messagesToSend = [message, ...messagesToSend];
     }
-
+    console.log("messagesToSend",messagesToSend);
     const stream = await OpenAIStream(model, promptToSend, temperatureToUse, key, messagesToSend);
 
     return new Response(stream);

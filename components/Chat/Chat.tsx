@@ -93,6 +93,8 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         });
         homeDispatch({ field: 'loading', value: true });
         homeDispatch({ field: 'messageIsStreaming', value: true });
+
+        console.log("updatedConversation.messages", updatedConversation.messages);
         const chatBody: ChatBody = {
           model: updatedConversation.model,
           messages: updatedConversation.messages,
@@ -102,6 +104,8 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         };
         const endpoint = getEndpoint(plugin);
         let body;
+
+        console.log("plugin",plugin);
         if (!plugin) {
           body = JSON.stringify(chatBody);
         } else {
@@ -116,6 +120,9 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           });
         }
         const controller = new AbortController();
+
+        console.log("endpoint",endpoint);
+        console.log("body",body);
         const response = await fetch(endpoint, {
           method: 'POST',
           headers: {
@@ -131,6 +138,9 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           return;
         }
         const data = response.body;
+
+        console.log("response", response);
+        console.log("response.body", data);
         if (!data) {
           homeDispatch({ field: 'loading', value: false });
           homeDispatch({ field: 'messageIsStreaming', value: false });
@@ -162,6 +172,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
             done = doneReading;
             const chunkValue = decoder.decode(value);
             text += chunkValue;
+            console.log("text",text);
             if (isFirst) {
               isFirst = false;
               const updatedMessages: Message[] = [
@@ -197,6 +208,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
               });
             }
           }
+          console.log(updatedConversation);
           saveConversation(updatedConversation);
           const updatedConversations: Conversation[] = conversations.map(
             (conversation) => {
@@ -206,6 +218,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
               return conversation;
             },
           );
+          console.log("updatedConversations",updatedConversations);
           if (updatedConversations.length === 0) {
             updatedConversations.push(updatedConversation);
           }
@@ -493,6 +506,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
             stopConversationRef={stopConversationRef}
             textareaRef={textareaRef}
             onSend={(message, plugin) => {
+              console.log("onSend",message);
               setCurrentMessage(message);
               handleSend(message, 0, plugin);
             }}

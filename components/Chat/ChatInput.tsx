@@ -72,7 +72,9 @@ export const ChatInput = ({
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     const maxLength = selectedConversation?.model.maxLength;
-
+    console.log("maxLength2",maxLength);
+    console.log("value.length",value.length);
+    console.log("value",value);
     if (maxLength && value.length > maxLength) {
       alert(
         t(
@@ -80,7 +82,7 @@ export const ChatInput = ({
           { maxLength, valueLength: value.length },
         ),
       );
-      return;
+      //return;
     }
 
     setContent(value);
@@ -96,7 +98,7 @@ export const ChatInput = ({
       alert(t('Please enter a message'));
       return;
     }
-
+    console.log("handleSend content",content);
     onSend({ role: 'user', content }, plugin);
     setContent('');
     setPlugin(null);

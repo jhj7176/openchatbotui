@@ -1,7 +1,7 @@
 import { Message } from '@/types/chat';
 import { OpenAIModel } from '@/types/openai';
 
-import { AZURE_DEPLOYMENT_ID, OPENAI_API_HOST, OPENAI_API_TYPE, OPENAI_API_VERSION, OPENAI_ORGANIZATION } from '../app/const';
+import { AZURE_DEPLOYMENT_ID, OPENAI_API_HOST, OPENAI_API_TYPE, OPENAI_API_VERSION, OPENAI_ORGANIZATION, DEFAULT_MODEL } from '../app/const';
 
 import {
   ParsedEvent,
@@ -34,6 +34,13 @@ export const OpenAIStream = async (
   if (OPENAI_API_TYPE === 'azure') {
     url = `${OPENAI_API_HOST}/openai/deployments/${AZURE_DEPLOYMENT_ID}/chat/completions?api-version=${OPENAI_API_VERSION}`;
   }
+
+  console.log("Url",url);
+  console.log("Authorization",process.env.OPENAI_API_KEY);
+  console.log("OpenApiType",OPENAI_API_TYPE);
+  console.log("Messages",messages);
+  console.log("model",DEFAULT_MODEL);
+  
   const res = await fetch(url, {
     headers: {
       'Content-Type': 'application/json',
@@ -49,7 +56,7 @@ export const OpenAIStream = async (
     },
     method: 'POST',
     body: JSON.stringify({
-      ...(OPENAI_API_TYPE === 'openai' && {model: model.id}),
+      ...(OPENAI_API_TYPE === 'openai' && {model: DEFAULT_MODEL}),
       messages: [
         {
           role: 'system',
@@ -65,7 +72,7 @@ export const OpenAIStream = async (
 
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();
-
+  //console.log("res",res);
   if (res.status !== 200) {
     const result = await res.json();
     if (result.error) {

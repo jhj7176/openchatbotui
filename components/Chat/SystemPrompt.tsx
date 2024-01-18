@@ -47,7 +47,8 @@ export const SystemPrompt: FC<Props> = ({
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     const maxLength = conversation.model.maxLength;
-
+    
+    console.log("maxLength", maxLength);
     if (value.length > maxLength) {
       alert(
         t(
